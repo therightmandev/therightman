@@ -1,0 +1,33 @@
+{% load static tailwind_tags django_htmx %}
+
+{% if debug %}
+{% load django_browser_reload %}
+{% django_browser_reload_script %}
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <title>therightman - Salvador Alves</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% tailwind_css %}
+</head>
+
+<body class="bg-slate-900 leading-normal tracking-normal" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }} border w-fit p-3 text-lg" {% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+  <script src="{% static 'nav.js' %}"></script>
+  {% block js_scripts %}{% endblock %}
+  <script src="{% static 'htmx.min.js' %}" defer></script>
+  {% django_htmx_script %}
+</body>
+
+</html>

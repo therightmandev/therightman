@@ -1,0 +1,41 @@
+FROM python:3.12.5-slim-bookworm
+
+ENV HOME=/home/app
+ENV APP_HOME=$HOME/actout
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# install system dependencies
+RUN apt-get update && apt-get install -y \
+    netcat-traditional \
+    curl \
+    bash
+
+ENV NODE_VERSION=20.16.0
+ENV NVM_DIR=$HOME/.nvm
+RUN mkdir -p $NVM_DIR && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
+    /bin/bash -c "source $NVM_DIR/nvm.sh && \
+    nvm install ${NODE_VERSION} && \
+    nvm use v${NODE_VERSION} && \
+    nvm alias default v${NODE_VERSION}"
+
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin/:$PATH
+
+RUN node --version
+RUN npm --version
+
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . $APP_HOME
+
+RUN chmod +x $APP_HOME/entrypoint-dev.sh
+
+
+# TODO: maybe use the production Dockerfile from testdriven.io
+# for smaller final image size:
+# https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/#production-dockerfile
