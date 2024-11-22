@@ -6,7 +6,7 @@
 {% endif %}
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth bg-slate-800">
 
 <head>
   <title>therightman - Salvador Alves</title>
@@ -15,7 +15,7 @@
   {% tailwind_css %}
 </head>
 
-<body class="bg-slate-900 leading-normal tracking-normal" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body class="pt-10 bg-gradient-to-b from-slate-900 to-slate-800 to-50% bg-no-repeat leading-normal tracking-normal" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
   {% if messages %}
   <ul class="messages">
     {% for message in messages %}
